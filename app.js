@@ -9,12 +9,12 @@ const base64 = require("base64-stream");
 const textract = require("textract");
 const _ = require("lodash");
 app.listen(8055);
-let candidate_gender_female = ['female', 'kumari'],
+var candidate_gender_female = ['female', 'kumari'],
     candidate_gender_male = ['male', 'kumar'],
     key_skills = ['php', 'js', 'javascript', 'html', 'jquery'],
     qualification = ['b.tech', 'mca', 'bca'],
     traning = ['traning', 'internship']
-let findAttachmentParts = (struct, attachments) => {
+var findAttachmentParts = (struct, attachments) => {
     attachments = attachments || [];
     var len = struct.length;
     for (var i = 0; i < len; ++i) {
@@ -27,7 +27,7 @@ let findAttachmentParts = (struct, attachments) => {
     return attachments;
 }
 
-let filesave = (stream, filepath, filename, encoding) => {
+var filesave = (stream, filepath, filename, encoding) => {
     return new Promise((resolve, reject) => {
         var writeStream = fs.createWriteStream(filepath);
         writeStream.on("finish", function() {
@@ -45,7 +45,7 @@ let filesave = (stream, filepath, filename, encoding) => {
     })
 }
 
-let getAttachment = (imap, uid, status) => {
+var getAttachment = (imap, uid, status) => {
     return new Promise((resolve, reject) => {
 
         attach = [];
@@ -55,8 +55,8 @@ let getAttachment = (imap, uid, status) => {
         }
         imap.once("ready", function() {
             openInbox(function() {
-                let a_attachments = '';
-                let a_attrs = ''
+                var a_attachments = '';
+                var a_attrs = ''
                 var f = imap.fetch(uid, {
                     bodies: ["HEADER.FIELDS (FROM TO SUBJECT BCC CC DATE)", "TEXT"],
                     struct: true
@@ -140,28 +140,28 @@ let getAttachment = (imap, uid, status) => {
     })
 }
 
-let readCV = (filepath) => {
+var readCV = (filepath) => {
     return new Promise((resolve, reject) => {
         textract.fromFileWithPath(filepath, function(error, text) {
             console.log(error, text)
-            let mobile_number = text.split(' ' || '+91').map(Number).filter(Boolean);
-            let skills = _.filter(key_skills, (filtered_data) => {
+            var mobile_number = text.split(' ' || '+91').map(Number).filter(Boolean);
+            var skills = _.filter(key_skills, (filtered_data) => {
                 return text.match(new RegExp(filtered_data, 'gi'))
             })
-            let male_gender = _.filter(candidate_gender_male, (filtered_data) => {
+            var male_gender = _.filter(candidate_gender_male, (filtered_data) => {
                 return text.match(new RegExp(filtered_data, 'gi'))
             }).length
 
-            let female_gender = _.filter(candidate_gender_female, (filtered_data) => {
+            var female_gender = _.filter(candidate_gender_female, (filtered_data) => {
                 return text.match(new RegExp(filtered_data, 'gi'))
             }).length
-            let qualifications = _.filter(qualification, (filtered_data) => {
+            var qualifications = _.filter(qualification, (filtered_data) => {
                 return text.match(new RegExp(filtered_data, 'gi'))
             })
-            let gender = (male_gender > 0) ? 'male' : (female_gender > 0 ? 'female' : "")
+            var gender = (male_gender > 0) ? 'male' : (female_gender > 0 ? 'female' : "")
             fs.unlink(filepath, function() {
                 console.log("success");
-                let final_response = {
+                var final_response = {
                     mobile_number: mobile_number,
                     skills: skills,
                     gender: gender,
