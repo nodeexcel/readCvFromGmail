@@ -1,0 +1,17 @@
+{
+  "name": "readcv",
+  "version": "1.0.0",
+  "description": "parsecv",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "author": "nodeexcel",
+  "license": "ISC",
+  "dependencies": {
+    "base64-stream": "^0.1.3",
+    "express": "^4.16.2",
+    "lodash": "^4.17.5",
+    "textract": "^2.2.0"
+  }
+}
