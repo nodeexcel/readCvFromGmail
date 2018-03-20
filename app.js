@@ -17,31 +17,31 @@ var candidate_gender_female = ['female', 'kumari'],
     traning = ['traning', 'internship']
 
 app.post("/upload/:pathname", function(req, res) {
-    let filename = path.basename(req.params.pathname);
+    var filename = path.basename(req.params.pathname);
     filename = path.resolve(`./uploads`, filename);
-    let dst = fs.createWriteStream(filename);
+    var dst = fs.createWriteStream(filename);
     req.pipe(dst);
     dst.on('drain', function() {
         req.resume();
     });
     req.on('end', function() {
         textract.fromFileWithPath(filename, function(error, text) {
-            let skills = _.filter(key_skills, (filtered_data) => {
+            var skills = _.filter(key_skills, (filtered_data) => {
                 return text.match(new RegExp(filtered_data, 'gi'))
             })
-            let male_gender = _.filter(candidate_gender_male, (filtered_data) => {
+            var male_gender = _.filter(candidate_gender_male, (filtered_data) => {
                 return text.match(new RegExp(filtered_data, 'gi'))
             }).length
 
-            let female_gender = _.filter(candidate_gender_female, (filtered_data) => {
+            var female_gender = _.filter(candidate_gender_female, (filtered_data) => {
                 return text.match(new RegExp(filtered_data, 'gi'))
             }).length
-            let qualifications = _.filter(qualification, (filtered_data) => {
+            var qualifications = _.filter(qualification, (filtered_data) => {
                 return text.match(new RegExp(filtered_data, 'gi'))
             })
-            let gender = (male_gender > 0) ? 'male' : (female_gender > 0 ? 'female' : "")
+            var gender = (male_gender > 0) ? 'male' : (female_gender > 0 ? 'female' : "")
             fs.unlink(filename, function() {
-                let final_response = {
+                var final_response = {
                     skills: skills,
                     gender: gender,
                     qualification: qualifications,
