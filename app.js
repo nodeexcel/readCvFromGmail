@@ -26,29 +26,41 @@ app.post("/upload/:pathname", function(req, res) {
     });
     req.on('end', function() {
         textract.fromFileWithPath(filename, function(error, text) {
-            var skills = _.filter(key_skills, (filtered_data) => {
-                return text.match(new RegExp(filtered_data, 'gi'))
-            })
-            var male_gender = _.filter(candidate_gender_male, (filtered_data) => {
-                return text.match(new RegExp(filtered_data, 'gi'))
-            }).length
+            if (text) {
+                var skills = _.filter(key_skills, (filtered_data) => {
+                    return text.match(new RegExp(filtered_data, 'gi'))
+                })
+                var male_gender = _.filter(candidate_gender_male, (filtered_data) => {
+                    return text.match(new RegExp(filtered_data, 'gi'))
+                }).length
 
-            var female_gender = _.filter(candidate_gender_female, (filtered_data) => {
-                return text.match(new RegExp(filtered_data, 'gi'))
-            }).length
-            var qualifications = _.filter(qualification, (filtered_data) => {
-                return text.match(new RegExp(filtered_data, 'gi'))
-            })
-            var gender = (male_gender > 0) ? 'male' : (female_gender > 0 ? 'female' : "")
-            fs.unlink(filename, function() {
-                var final_response = {
-                    skills: skills,
-                    gender: gender,
-                    qualification: qualifications,
-                    dob: text.match(/\d{2}([\/.-])\d{2}\1\d{4}/g)
-                }
-                res.json({ data: final_response });
-            })
+                var female_gender = _.filter(candidate_gender_female, (filtered_data) => {
+                    return text.match(new RegExp(filtered_data, 'gi'))
+                }).length
+                var qualifications = _.filter(qualification, (filtered_data) => {
+                    return text.match(new RegExp(filtered_data, 'gi'))
+                })
+                var gender = (male_gender > 0) ? 'male' : (female_gender > 0 ? 'female' : "")
+                fs.unlink(filename, function() {
+                    var final_response = {
+                        skills: skills,
+                        gender: gender,
+                        qualification: qualifications,
+                        dob: text.match(/\d{2}([\/.-])\d{2}\1\d{4}/g)
+                    }
+                    res.json({ data: final_response });
+                })
+            } else {
+                fs.unlink(filename, function() {
+                    var final_response = {
+                        skills: [],
+                        gender: [],
+                        qualification: [],
+                        dob: []
+                    }
+                    res.json({ data: final_response });
+                })
+            }
         })
 
     })
