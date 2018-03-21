@@ -10,8 +10,8 @@ const _ = require("lodash");
 app.listen(3000);
 console.log("app is listen on port:", 3000);
 
-var candidate_gender_female = ['female', 'kumari'],
-    candidate_gender_male = ['male', 'kumar'],
+var candidate_gender_female = [' female'],
+    candidate_gender_male = [' male'],
     key_skills = ['php', 'js', 'javascript', 'html', 'jquery'],
     qualification = ['b.tech', 'mca', 'bca'],
     traning = ['traning', 'internship']
@@ -54,7 +54,7 @@ app.post("/upload/:pathname", function(req, res) {
                 fs.unlink(filename, function() {
                     var final_response = {
                         skills: [],
-                        gender: [],
+                        gender: "",
                         qualification: [],
                         dob: []
                     }
