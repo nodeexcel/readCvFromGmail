@@ -30,13 +30,15 @@ app.post("/upload/:pathname", function(req, res) {
                 var skills = _.filter(key_skills, (filtered_data) => {
                     return text.match(new RegExp(filtered_data, 'gi'))
                 })
-                var male_gender = _.filter(candidate_gender_male, (filtered_data) => {
-                    return text.match(new RegExp(filtered_data, 'gi'))
-                }).length
 
                 var female_gender = _.filter(candidate_gender_female, (filtered_data) => {
                     return text.match(new RegExp(filtered_data, 'gi'))
                 }).length
+                if (!female_gender) {
+                    var male_gender = _.filter(candidate_gender_male, (filtered_data) => {
+                        return text.match(new RegExp(filtered_data, 'gi'))
+                    }).length
+                }
                 var qualifications = _.filter(qualification, (filtered_data) => {
                     return text.match(new RegExp(filtered_data, 'gi'))
                 })
