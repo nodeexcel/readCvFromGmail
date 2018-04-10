@@ -10,11 +10,23 @@ const _ = require("lodash");
 app.listen(3000);
 console.log("app is listen on port:", 3000);
 
-var candidate_gender_female = [' female'],
+var candidate_gender_female = [' female', 'female'],
     candidate_gender_male = [' male'],
     key_skills = ['php', 'js', 'javascript', 'html', 'jquery'],
     qualification = ['b.tech', 'mca', 'bca'],
     traning = ['traning', 'internship']
+
+function min_date(all_dates) {
+    var min_dt = all_dates[0],
+        min_dtObj = new Date(all_dates[0]);
+    all_dates.forEach(function(dt, index) {
+        if (new Date(dt) < min_dtObj) {
+            min_dt = dt;
+            min_dtObj = new Date(dt);
+        }
+    });
+    return min_dt;
+}
 
 app.post("/upload/:pathname", function(req, res) {
     var filename = path.basename(req.params.pathname);
@@ -42,13 +54,19 @@ app.post("/upload/:pathname", function(req, res) {
                 var qualifications = _.filter(qualification, (filtered_data) => {
                     return text.match(new RegExp(filtered_data, 'gi'))
                 })
+                var dob = text.match(/\d{2}([\/.-])\d{2}\1\d{4}/g);
+                if (dob != null && dob.length > 1) {
+                    dob = min_date(dob)
+                    console.log(dob, "=================")
+                }
+                console.log(dob)
                 var gender = (male_gender > 0) ? 'male' : (female_gender > 0 ? 'female' : "")
                 fs.unlink(filename, function() {
                     var final_response = {
                         skills: skills,
                         gender: gender,
                         qualification: qualifications,
-                        dob: text.match(/\d{2}([\/.-])\d{2}\1\d{4}/g)
+                        dob: (dob != null && dob.length == 1) ? dob : null
                     }
                     res.json({ data: final_response });
                 })
@@ -58,7 +76,7 @@ app.post("/upload/:pathname", function(req, res) {
                         skills: [],
                         gender: "",
                         qualification: [],
-                        dob: []
+                        dob: null
                     }
                     res.json({ data: final_response });
                 })
