@@ -71,6 +71,7 @@ app.post("/upload/:pathname", function(req, res) {
                     res.json({ data: final_response });
                 })
             } else {
+                console.log(error, "error")
                 fs.unlink(filename, function() {
                     var final_response = {
                         skills: [],
