@@ -39,6 +39,7 @@ app.post("/upload/:pathname", function(req, res) {
     req.on('end', function() {
         textract.fromFileWithPath(filename, function(error, text) {
             if (text) {
+                console.log(text, "text")
                 var skills = _.filter(key_skills, (filtered_data) => {
                     return text.match(new RegExp(filtered_data, 'gi'))
                 })
@@ -59,7 +60,6 @@ app.post("/upload/:pathname", function(req, res) {
                     dob = min_date(dob)
                     console.log(dob, "=================")
                 }
-                console.log(dob)
                 var gender = (male_gender > 0) ? 'male' : (female_gender > 0 ? 'female' : "")
                 fs.unlink(filename, function() {
                     var final_response = {
@@ -68,6 +68,7 @@ app.post("/upload/:pathname", function(req, res) {
                         qualification: qualifications,
                         dob: (dob != null && dob.length == 1) ? dob : null
                     }
+                    console.log(final_response, "response")
                     res.json({ data: final_response });
                 })
             } else {
