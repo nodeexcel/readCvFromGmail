@@ -38,20 +38,23 @@ app.post("/upload/:pathname", function(req, res) {
     });
     req.on('end', function() {
         textract.fromFileWithPath(filename, function(error, text) {
+            var docString = `'${text.replace(/[^\w\s]/gi, '').toUpperCase()}'`;
+            // var docString = `'${text.replace(/[^a-zA-Z ]/g, "").toUpperCase()}'`;
+            var gender = docString.includes("FEMALE")? 'female' : (docString.includes("MALE")? 'male' : '')
             if (text) {
                 console.log(text, "text")
                 var skills = _.filter(key_skills, (filtered_data) => {
                     return text.match(new RegExp(filtered_data, 'gi'))
                 })
 
-                var female_gender = _.filter(candidate_gender_female, (filtered_data) => {
-                    return text.match(new RegExp(filtered_data, 'gi'))
-                }).length
-                if (!female_gender) {
-                    var male_gender = _.filter(candidate_gender_male, (filtered_data) => {
-                        return text.match(new RegExp(filtered_data, 'gi'))
-                    }).length
-                }
+                // var female_gender = _.filter(candidate_gender_female, (filtered_data) => {
+                //     return text.match(new RegExp(filtered_data, 'gi'))
+                // }).length
+                // if (!female_gender) {
+                //     var male_gender = _.filter(candidate_gender_male, (filtered_data) => {
+                //         return text.match(new RegExp(filtered_data, 'gi'))
+                //     }).length
+                // }
                 var qualifications = _.filter(qualification, (filtered_data) => {
                     return text.match(new RegExp(filtered_data, 'gi'))
                 })
@@ -60,7 +63,7 @@ app.post("/upload/:pathname", function(req, res) {
                     dob = min_date(dob)
                     console.log(dob, "=================")
                 }
-                var gender = (male_gender > 0) ? 'male' : (female_gender > 0 ? 'female' : "")
+                // var gender = (male_gender > 0) ? 'male' : (female_gender > 0 ? 'female' : "")
                 fs.unlink(filename, function() {
                     var final_response = {
                         skills: skills,
