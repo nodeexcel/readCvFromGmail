@@ -7,8 +7,8 @@ const fs = require("fs");
 const textract = require("textract");
 const _ = require("lodash");
 
-app.listen(3000);
-console.log("app is listen on port:", 3000);
+app.listen(4040);
+console.log("app is listen on port:", 4040);
 
 var candidate_gender_female = [' female', 'female'],
     candidate_gender_male = [' male'],
